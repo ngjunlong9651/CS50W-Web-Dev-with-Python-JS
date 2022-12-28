@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'hello', ## Added this into the code, do we need a comma at the end?
+    'newyear', # Added new year pp
 ]
 
 MIDDLEWARE = [
