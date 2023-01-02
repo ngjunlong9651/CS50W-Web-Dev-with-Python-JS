@@ -6,4 +6,10 @@
 
 {% block body %}
     {{ content | safe }}
+
+    <form action = "{% url 'edit' %}" method = "POST">
+        {% csrf_token %} <!-- Must include this for the method == post-->
+        <input type="hidden" name="entry_title" value="{{ title }}">
+        <input type="submit"  value="Edit The Content Of This Entry" class = "btn btn-warning" />
+    </form>
 {% endblock %}

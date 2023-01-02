@@ -8,7 +8,7 @@
     <h1>All Pages</h1>
 
     <ul>
-        {% for entry in entries %}
+        {% for entry in auto_fill %} <!-- This came from views.py under the function known as search-->
             <li><a href="{% url 'entry' title=entry %}"> {{ entry }} </a></li>
         {% endfor %}
     </ul>

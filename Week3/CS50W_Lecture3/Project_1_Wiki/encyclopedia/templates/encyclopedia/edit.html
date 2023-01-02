@@ -6,23 +6,22 @@
 
 <!-- The contents of this form will be sent to the views.py -->
 {% block body %}
-    <h1> Create a new page here:</h1>
+    <h1> Edit an existing page here:</h1>
 
-    <form method="POST" action="{% url 'new_page' %}">
+    <form method="POST" action="{% url 'save_edit' %}">
         {% csrf_token %} <!-- Must include this for the method == post-->
         <p>
             <label> Enter New Entry: </label>
         </p>
         <!-- Creating a form whose input will be stored as new_entry-->
-        <input type="text" name="new_entry" placeholder="Enter a new entry here" autocomplete="off">
+        <input type="text" name="new_entry" placeholder="Enter a new entry here" value = "{{ title }}">
         <p>
             <lable> Enter MarkDown Content Here: </lable>
         </p>
         <!-- Creating a textarea whose input will be stored as new_content-->
-        <textarea name="new_content" placeholder="Enter Content For Your Entry Here">
-        </textarea>
+        <textarea name="new_content"> {{content}} </textarea>
         <br>
-        <input class="btn btn-primary" type="submit" name="submit_content" id="submit_content">
+        <input class="btn btn-warning" value="Edit" type="submit" name="submit_content" id="submit_content">
 
     </form>
 
