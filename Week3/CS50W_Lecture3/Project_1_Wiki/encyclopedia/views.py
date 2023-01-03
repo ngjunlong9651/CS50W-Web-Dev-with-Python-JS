@@ -1,9 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 import markdown
-
+import random
 from . import util
 
+
+## Generally, you should follow these steps:
+## 1) Create a new view in views.py with the necessary logic
+## 2) Link the new view to the urls.py portion
+## 3) Create a new template under the template directory
 
 ## Creating a markdown to HTML converter function using markdown package
 def md_converter(titles):
@@ -58,7 +63,13 @@ def new_page(request):
 
 
 def random_page(request):
-    return render(request, "encyclopedia/random_page.html")
+    entrieslist = util.list_entries() ## Create a list of all the entries
+    random_page = random.choice(entrieslist) ## using random package to get a random entry
+    html_content = md_converter(random_page)
+    return render(request, "encyclopedia/entry.html", {
+        "title": random_page,
+        "content" : html_content
+    })
 
 def search(request):
     if request.method == "POST": ## Linked to the form in layout.html
