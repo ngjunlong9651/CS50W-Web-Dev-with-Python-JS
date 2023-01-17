@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Category, Listing
+from .models import User, Category, Listing, Comment, Bid
 
 
 def index(request):
@@ -16,7 +16,35 @@ def index(request):
     })
     ##LHS is referred to by HTML, RHS is referred to by python
 
+def addBid(request, id):
+    newBid = int(request.POST['newBid'])
+    listingData = Listing.objects.get(pk=id)
+    isOwner = request.user.username == listingData.owner.username
+    isListingInWatchlist = request.user in listingData.watchlist.all() ## Check if user is in the watchlist
+    allComments = Comment.objects.filter(listing=listingData)
+    if newBid > listingData.price.bid:
+        updateBid = Bid(user=request.user, bid = newBid)
+        updateBid.save()
+        listingData.price = updateBid
+        listingData.save()
+        return render(request,"auctions/listing.html",{
+            "listing": listingData,
+            "message": "Bid was successfully updated!",
+            "update": True,
+            "isOwner": isOwner ,
+            "isListingInWatchList" : isListingInWatchlist,
+            "allComments" : allComments
+        })
 
+    else:
+        return render(request,"auctions/listing.html",{
+            "listing": listingData,
+            "isOwner": isOwner,
+            "message": "Bid was NOT successfully updated!",
+            "update": False,
+            "isListingInWatchList" : isListingInWatchlist,
+            "allComments" : allComments
+        })
 
 def createListing(request):
     if request.method == "GET":
@@ -35,6 +63,10 @@ def createListing(request):
         price = request.POST['price']
         ## Need to check for current user as well 
 
+
+        ## Need to create a bid object for new listing
+        bid = Bid(bid = int(price), user = currentUser)
+        bid.save()
         ## Get all content for new listing category 
         categoryData = Category.objects.get(categoryName = category)
 
@@ -43,7 +75,7 @@ def createListing(request):
             title = title, 
             description = description,
             imageURL = imageURL,
-            price = float(price),
+            price = bid,
             category = categoryData,
             owner = currentUser
         )
@@ -107,10 +139,28 @@ def register(request):
 def listing(request, id):
     listingData = Listing.objects.get(pk=id)
     isListingInWatchlist = request.user in listingData.watchlist.all() ## Check if user is in the watchlist
+    allComments = Comment.objects.filter(listing=listingData)
+    isOwner = request.user.username == listingData.owner.username
     return render(request, "auctions/listing.html",{
         "listing":listingData,
-        "isListingInWatchlist" : isListingInWatchlist
+        "isListingInWatchlist" : isListingInWatchlist,
+        "allComments":allComments,
+        "isOwner": isOwner
     })
+
+
+def closeAuction(request, id):
+    listingData = Listing.objects.get(pk=id)
+    listingData.isActive = False
+    listingData.save()
+    isOwner = request.user.username == listingData.owner.username
+    return render(request, "auctions/listing.html",{
+    "listing":listingData,
+    "update": True,
+    "message": "Congratulations, your auction has been closed!",
+    "isOwner": isOwner  
+    })
+
 
 def displayCategory(request):
     if request.method == "POST":
@@ -124,6 +174,17 @@ def displayCategory(request):
     })
     ##LHS is referred to by HTML, RHS is referred to by python
 
+def watchlist(request):
+    currentuser = request.user
+    listings = currentuser.listingWatchlist.all()
+    return render(request, "auctions/watchlist.html",{
+        "listings" : listings
+    })
+
+    #currentUser = request.user
+    #listings = currentUser.listingWatchlist.all()
+    #return render(request, "auctions/watchlist.html")
+
 def removeWatchList(request,id):
     listingData=Listing.objects.get(pk=id)
     currentUser = request.user
@@ -136,7 +197,18 @@ def addWatchList(request,id):
     listingData.watchlist.add(currentUser)
     return HttpResponseRedirect(reverse("listing", args = (id, )))
 
-def displayWatchlist(request):
+def addComment(request, id):
     currentUser = request.user
-    listings = currentUser.listingWatchlist.all()
-    return render(request, "auctions/watchlist.html")
+    listingData = Listing.objects.get(pk=id)
+    message = request.POST['newComment']
+
+    newComment = Comment(
+        author = currentUser,
+        listing = listingData,
+        message = message
+    )
+
+    newComment.save()
+
+    return HttpResponseRedirect(reverse("listing", args = (id, )))
+ 
