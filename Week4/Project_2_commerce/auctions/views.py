@@ -8,7 +8,13 @@ from .models import User, Category, Listing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    activelistings = Listing.objects.filter(isActive = True)
+    allCategory = Category.objects.all()
+    return render(request, "auctions/index.html",{
+        "listings": activelistings,
+        "categories": allCategory,
+    })
+    ##LHS is referred to by HTML, RHS is referred to by python
 
 
 
@@ -97,3 +103,40 @@ def register(request):
         return HttpResponseRedirect(reverse("index"))
     else:
         return render(request, "auctions/register.html")
+
+def listing(request, id):
+    listingData = Listing.objects.get(pk=id)
+    isListingInWatchlist = request.user in listingData.watchlist.all() ## Check if user is in the watchlist
+    return render(request, "auctions/listing.html",{
+        "listing":listingData,
+        "isListingInWatchlist" : isListingInWatchlist
+    })
+
+def displayCategory(request):
+    if request.method == "POST":
+        chosenCategory = request.POST["category"]
+        category = Category.objects.get(categoryName = chosenCategory)
+        activelistings = Listing.objects.filter(isActive = True, category = category)
+        allCategory = Category.objects.all()
+        return render(request, "auctions/index.html",{
+            "listings": activelistings,
+            "categories": allCategory,
+    })
+    ##LHS is referred to by HTML, RHS is referred to by python
+
+def removeWatchList(request,id):
+    listingData=Listing.objects.get(pk=id)
+    currentUser = request.user
+    listingData.watchlist.remove(currentUser)
+    return HttpResponseRedirect(reverse("listing", args =(id, )))
+
+def addWatchList(request,id):
+    listingData= Listing.objects.get(pk=id)
+    currentUser = request.user
+    listingData.watchlist.add(currentUser)
+    return HttpResponseRedirect(reverse("listing", args = (id, )))
+
+def displayWatchlist(request):
+    currentUser = request.user
+    listings = currentUser.listingWatchlist.all()
+    return render(request, "auctions/watchlist.html")
