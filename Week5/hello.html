@@ -1,0 +1,35 @@
+<!DOCTYPE html> 
+<html lang="en">
+
+    <head>
+        <title> Hello World </title>
+        <script>
+
+            document.addEventListener("DOMContentLoaded", function() {
+                document.querySelector('form').onsubmit = function(){
+                   const name = document.querySelector('#name').value;
+                   alert(`Hello ${name}!`);
+                };
+            }); 
+            // function HelloWorld() {
+                // let heading = document.querySelector('h1');
+                // creating a variable that will never change
+                // const heading = document.querySelector('h1')
+                // if (heading.innerHTML === 'Hello!'){ //Showing the use of conditionals
+                //    heading.innerHTML = 'Goodbye!';
+                //} else {
+                //    heading.innerHTML = 'Hello!';
+                //}
+            //}
+        </script>
+     </head> 
+     <body>
+        <h1>Hello!</h1>
+        <!-- <button onclick="HelloWorld()"> Click Here To change the title to goodbye: </button> -->
+        <form>
+            <input autofocus id ="name" placeholder="Insert text">
+            <input type ="submit">
+
+        </form>
+     </body>
+</html> 
