@@ -1,0 +1,36 @@
+<!DOCTYPE html> 
+<html lang="en">
+
+    <head>
+        <title> Tasks </title>
+
+        <!-- Linking to JS-->
+        <script> 
+            document.addEventListener("DOMContentLoaded",function(){
+                document.querySelector('form').onsubmit = () => {
+                    const task = document.querySelector('#task').value; // gets the value of what the user typed in
+                    //console.log('task'); //print the value into the JS console
+
+                    const li = document.createElement('li'); // Creating a new list element
+                    li.innterHTML = task; //setting new list element = task
+
+                    document.querySelector('#tasks').append(li); //get the element of tasks from the below code and append the new li containing a new task element
+
+                // stop form from submitting
+                //    return false;
+            }
+        });
+
+        </script>
+
+     </head> 
+     <body>
+        <h1>Tasks</h1>
+        <ul id ="tasks">
+        </ul>
+        <form>
+            <input id="task" placeholder="Enter a new task" type="text">
+            <input type="submit">
+        </form>
+     </body>
+</html> 

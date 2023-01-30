@@ -14,8 +14,13 @@
         {% endif %}
     </div>
 
+    {% if not listing.isActive and user == listing.price.user %}
+    <div class ="alert alert-success" role ="alert">
+        Congratulations! You have won the auction! 
+    </div>
+
     <div class= "row">
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and listing.isActive %}
             {% if isOwner %}
                 <form action ="{% url 'closeAuction' id=listing.id %}" method = "POST" class="mx-3">
                     {% csrf_token %}

@@ -153,6 +153,7 @@ def closeAuction(request, id):
     listingData = Listing.objects.get(pk=id)
     listingData.isActive = False
     listingData.save()
+    isListingInWatchlist = request.user in listingData.watchlist.all() ## Check if user is in the watchlist
     isOwner = request.user.username == listingData.owner.username
     return render(request, "auctions/listing.html",{
     "listing":listingData,
