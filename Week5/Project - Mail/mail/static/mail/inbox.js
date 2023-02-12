@@ -67,7 +67,7 @@ function open_email(id){
     const reply = document.createElement('button');
     reply.className = "btn btn-primary m-2";
     reply.innerHTML = "Reply";
-    reply.addEventListener('click', function() {
+    reply.addEventListener('click', function(){
       compose_email();
 
       // populate fields with information from email
