@@ -1,25 +1,33 @@
-
 <!DOCTYPE html>
 <html lang="en">
     <head>
         <script src="https://unpkg.com/react@17/umd/react.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/react-dom@17/umd/react-dom.production.min.js" crossorigin></script>
         <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-        <title>Hello</title>
+        <title>React</title>
     </head>
     <body>
         <div id="app"></div>
-
-        <script type="text/babel">
+<!-- JSX extension needed for REACT -->
+        <script type="text/babel"> 
+        // Creating a function called Hello
+        function Hello(props){
+            return (
+                <h1> Hello {props.name}! </h1>
+            );
+        }
+ // creating an application using a javascript function.
             function App() {
                 return (
                     <div>
-                        Hello!
+                        <Hello name ="Harry"/>
+                        <Hello name ="Ron"/>
+                        <Hello name ="Hermione"/>
                     </div>
                 );
             }
-
-            ReactDOM.render(<App />, document.querySelector("#app"));
+// Rendering the webpage
+            ReactDOM.render(<App />, document.querySelector("#app")); //render the app and where the document is, look for the div ="app"
         </script>
     </body>
 </html>
