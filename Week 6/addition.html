@@ -25,9 +25,16 @@
                 font-size: 72px;
                 color:green;
             }
+
+            #loser{
+                font-size: 102px;
+                color:red;
+            }
             </style>
+        
         <title>React</title>
     </head>
+
     <body>
         <div id="app"></div>
 <!-- JSX extension needed for REACT -->
@@ -37,8 +44,8 @@
             function App() {
                 // Creating a javascript object similar to python dictionaries
                 const [state, setState] = React.useState({
-                    num1:2,
-                    num2:2, 
+                    num1: Math.ceil(Math.random()*10),
+                    num2: Math.ceil(Math.random()*10),
                     response: "",
                     score: 0,
                     incorrect: false
@@ -53,15 +60,15 @@
                             //user got it right
                             setState({
                                 ...state,
-                                num1: Math.ceil(Math.random() * 10),
-                                num2: Math.ceil(Math.random() * 10),
+                                num1: Math.ceil(Math.random()*100),
+                                num2: Math.ceil(Math.random()*100),
                                 score: state.score + 1,
                                 response: "",
                                 incorrect: false
                             })
                         }
                         else
-                        {
+                        {// User got it wrong
                             setState({
                                 ...state,
                                 score: state.score - 1,
@@ -75,17 +82,29 @@
                 function updateResponse(event){
                     setState({
                         ...state, // telling React to keep everything the same
-                        response: event.target.value // everythhing the same except for input field
+                        response: event.target.value // everything the same except for input field
                     });
                 }
 
-                if (state.score === 3){
+                if (state.score === 3)
+                {
                     return(
                         <div id ="winner">
-                            Winner
+                            You have won the program.
                         </div>
                     );
                 }
+
+                // If user got less than 0
+                // else if (state.score < 0)
+                // {
+                //     return
+                //     (
+                //         <div id ="loser">
+                //             You Have lost to the program 
+                //         </div>
+                //     );
+                // }
 
                 return (
                     <div>
